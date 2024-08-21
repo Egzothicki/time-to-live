@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Left to Live</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .center-text {
+            text-align: center;
+        }
+        .large-text {
+            font-size: 48px;
+            font-weight: bold;
+        }
+        .link-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+        }
+        .link-button:hover {
+            background-color: #17a045;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-text">
+        <div class="large-text">TIME LEFT TO LIVE</div>
+        <a href="{{ url_for('next_step') }}" class="link-button">See Yours</a>
+    </div>
+</body>
+</html>

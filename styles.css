@@ -1,0 +1,46 @@
+/* styles.css */
+
+/* Universal Styles */
+body {
+    background-color: #121212;
+    color: #00FF00; /* Green color for the Matrix effect */
+    font-family: 'Courier New', Courier, monospace; /* Monospaced font */
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p, label, input, select, button {
+    font-family: 'Courier New', Courier, monospace; /* Monospaced font for all text */
+    color: #00FF00; /* Green color for all text */
+    text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 40px #00FF00;
+    /* Adds a glowing effect */
+}
+
+.container {
+    background-color: #1E1E1E; /* Slightly lighter background for containers */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Optional shadow for better contrast */
+}
+
+a {
+    color: #00FF00; /* Green color for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    background-color: #00FF00; /* Green button background */
+    color: black; /* Black text for contrast */
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #00CC00; /* Slightly darker green on hover */
+}

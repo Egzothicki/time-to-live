@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Time Left to Live</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .center-text {
+            text-align: center;
+        }
+        .large-text {
+            font-size: 48px;
+            font-weight: bold;
+        }
+        .time-left {
+            font-size: 36px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-text">
+        <div class="large-text">Your Time Left to Live</div>
+        <div id="countdown" class="time-left"></div>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            const deathDate = new Date("{{ death_date }}").getTime();
+            const now = new Date().getTime();
+            const timeLeft = deathDate - now;
+
+            // Use 365.25 days per year to account for leap years
+            const daysPerYear = 365.25;
+
+            // Calculate the number of years left
+            const years = Math.floor(timeLeft / (1000 * 60 * 60 * 24 * daysPerYear));
+
+            // Calculate the remaining time after subtracting years
+            const remainingAfterYears = timeLeft % (1000 * 60 * 60 * 24 * daysPerYear);
+
+            // Calculate the number of days left in the remaining time
+            const days = Math.floor(remainingAfterYears / (1000 * 60 * 60 * 24));
+
+            // Calculate the number of hours, minutes, and seconds
+            const hours = Math.floor((remainingAfterYears % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((remainingAfterYears % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remainingAfterYears % (1000 * 60)) / 1000);
+
+            // Update the countdown display
+            document.getElementById("countdown").innerHTML = `${years}y ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            // Stop the countdown if the time has passed
+            if (timeLeft < 0) {
+                clearInterval(timer);
+                document.getElementById("countdown").innerHTML = "EXPIRED";
+            }
+        }
+
+        // Initialize the countdown and update every second
+        updateCountdown();  // Initial call
+        const timer = setInterval(updateCountdown, 1000);  // Update every second
+    </script>
+    <br>
+            {% if 'username' in session %}
+            <div class="logout-container">
+                <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+            </div>
+            {% endif %}
+</body>
+</html>

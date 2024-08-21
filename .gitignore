@@ -1,0 +1,16 @@
+# Python
+*.pyc
+__pycache__/
+
+# Virtual Environment
+venv/
+
+# Environment Variables
+.env
+
+# User files
+users.txt
+
+# IDE specific
+.vscode/
+.idea/

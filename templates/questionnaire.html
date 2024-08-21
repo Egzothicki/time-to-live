@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #1E1E1E;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: #333;
+            color: #FFF;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #17a045;
+        }
+        .logout-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .logout-link {
+            color: #1DB954;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Questionnaire</h1>
+        <form action="/time-to-live" method="POST">
+            <label for="age">What is your age?</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="gender">What is your gender?</label>
+            <select id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="smoker">Do you smoke?</label>
+            <select id="smoker" name="smoker" required>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+
+            <label for="exercise">How often do you exercise per week?</label>
+            <input type="number" id="exercise" name="exercise" required>
+
+            <!-- Add more questions as needed -->
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Logout link outside the form -->
+        {% if 'username' in session %}
+        <div class="logout-container">
+            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -277,12 +277,5 @@ def results():
 
     return render_template('results.html', death_date=death_date)
 
-@app.route('/list_users')
-def list_users():
-    conn = get_db_connection()
-    users = conn.execute('SELECT * FROM users').fetchall()
-    conn.close()
-    return f"{users}"
-
 if __name__ == '__main__':
     app.run(debug=True)

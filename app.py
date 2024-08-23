@@ -36,6 +36,7 @@ def init_db():
     ''')
     conn.commit()
     conn.close()
+    print("Database initialized")  # Add this line for logging
 
 # Call this function when the app starts
 init_db()
@@ -267,12 +268,21 @@ def results():
 
     # Load the user's data from the database
     user = get_user_by_username(session['username'])
-    death_date = user['death_date']
-
-    if death_date:
-        return render_template('results.html', death_date=death_date)
-    else:
+    if not user:
         return redirect(url_for('questionnaire'))
+
+    death_date = user['death_date']
+    if not death_date:
+        return redirect(url_for('questionnaire'))
+
+    return render_template('results.html', death_date=death_date)
+
+@app.route('/list_users')
+def list_users():
+    conn = get_db_connection()
+    users = conn.execute('SELECT * FROM users').fetchall()
+    conn.close()
+    return f"{users}"
 
 if __name__ == '__main__':
     app.run(debug=True)

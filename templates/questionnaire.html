@@ -3,106 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questionnaire</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: #FFFFFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 80%;
-            max-width: 600px;
-            padding: 20px;
-            background-color: #1E1E1E;
-            border-radius: 8px;
-        }
-        h1 {
-            text-align: center;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 4px;
-            border: 1px solid #333;
-            background-color: #333;
-            color: #FFF;
-        }
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #1DB954;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            width: 100%;
-            border-radius: 4px;
-        }
-        button:hover {
-            background-color: #17a045;
-        }
-        .logout-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .logout-link {
-            color: #1DB954;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .logout-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Health Questionnaire</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Questionnaire</h1>
-        <form action="/time-to-live" method="POST">
-            <label for="age">What is your age?</label>
-            <input type="number" id="age" name="age" required>
-
-            <label for="gender">What is your gender?</label>
-            <select id="gender" name="gender" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-            </select>
-
-            <label for="smoker">Do you smoke?</label>
-            <select id="smoker" name="smoker" required>
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-
-            <label for="exercise">How often do you exercise per week?</label>
-            <input type="number" id="exercise" name="exercise" required>
-
-            <!-- Add more questions as needed -->
-
-            <button type="submit">Submit</button>
-        </form>
-
-        <!-- Logout link outside the form -->
-        {% if 'username' in session %}
-        <div class="logout-container">
-            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
-        </div>
-        {% endif %}
+    <div id="questionnaire-container">
+        <form id="question-form" action="/time-to-live" method="POST" novalidate>
+            <!-- Age Question -->
+            <div class="question" data-question="1">
+                <label for="age">Age?</label>
+                <input type="number" id="age" name="age" class="terminal-input" required autocomplete="off">
+            </div>
+<!-- Gender Question -->
+<div class="question" data-question="2">
+    <label for="gender">Gender?</label>
+    <div class="custom-select">
+        <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
     </div>
+</div>
+            <!-- Height Question -->
+            <div class="question" data-question="3">
+                <label for="height">Height?</label>
+                <input type="number" id="height" name="height" class="terminal-input" required autocomplete="off">
+                <div class="custom-select">
+                    <select id="height_unit" name="height_unit" required>
+                        <option value="cm">cm</option>
+                        <option value="inches">inches</option>
+                </select>
+            </div>
+            </div>
+            
+           <!-- Weight Question -->
+            <div class="question" data-question="4">
+                <label for="weight">Weight?</label>
+                <input type="number" id="weight" name="weight" class="terminal-input" required autocomplete="off">
+                <div class="custom-select">
+                <select id="weight_unit" name="weight_unit" required>
+                    <option value="kg">kg</option>
+                    <option value="lbs">lbs</option>
+                </select>
+            </div>
+        </div>
+            
+           <!-- Family History Question -->
+<div class="question" data-question="5">
+    <label for="family_history">Do any of your immediate family members have a history of chronic diseases?</label>
+    <div class="custom-select">
+        <select id="family_history" name="family_history" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+</div>
+
+<!-- Personal Disease Question -->
+<div class="question" data-question="6">
+    <label for="medical_conditions">Do you have any chronic medical conditions? multiselect</label>
+    <div class="custom-multi-select" id="medical_conditions">
+        <label><input type="checkbox" name="medical_conditions" value="diabetes"> Diabetes</label>
+        <label><input type="checkbox" name="medical_conditions" value="heart_disease"> Heart Disease</label>
+        <label><input type="checkbox" name="medical_conditions" value="cancer"> Cancer</label>
+        <label><input type="checkbox" name="medical_conditions" value="hypertension"> Hypertension</label>
+        <label><input type="checkbox" name="medical_conditions" value="none"> None</label>
+    </div>
+</div>
+            
+<!-- High Blood Pressure Question -->
+<div class="question" data-question="7">
+    <label for="blood_pressure">Have you ever been diagnosed with high blood pressure?</label>
+    <div class="custom-select">
+        <select id="blood_pressure" name="blood_pressure" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+</div>
+            
+<div class="question" data-question="8">
+    <label for="cholesterol">Have you ever been diagnosed with high cholesterol levels?</label>
+    <div class="custom-select">
+        <select id="cholesterol" name="cholesterol" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+</div>
+            
+<div class="question" data-question="9">
+    <label for="smoker">Do you smoke?</label>
+    <div class="custom-select">
+        <select id="smoker" name="smoker" required>
+            <option value="never">Never</option>
+            <option value="former">Former</option>
+            <option value="current">Current</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="10">
+    <label for="alcohol">How many alcoholic drinks do you consume per week?</label>
+    <div class="custom-select">
+        <select id="alcohol" name="alcohol" required>
+            <option value="0">0</option>
+            <option value="1-3">1-3</option>
+            <option value="4-7">4-7</option>
+            <option value="8+">8+</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="11">
+    <label for="exercise">How often do you exercise per week?</label>
+    <input type="number" id="exercise" name="exercise" class="terminal-input" required>
+</div>
+<div class="question" data-question="12">
+    <label for="sleep">How many hours of sleep do you get per night on average?</label>
+    <div class="custom-select">
+        <select id="sleep" name="sleep" required>
+            <option value="less_than_5">Less than 5</option>
+            <option value="5-6">5-6</option>
+            <option value="7-8">7-8</option>
+            <option value="more_than_8">More than 8</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="13">
+    <label for="stress">How would you rate your stress levels on a scale from 1 (low) to 10 (high)?</label>
+    <input type="number" id="stress" name="stress" class="terminal-input" min="1" max="10" required>
+</div>
+
+<div class="question" data-question="14">
+    <label for="mental_health">Have you been diagnosed with any mental health conditions?</label>
+    <div class="custom-select">
+        <select id="mental_health" name="mental_health" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+</div>
+            
+<div class="question" data-question="15">
+    <label for="checkups">How often do you go for regular health check-ups?</label>
+    <div class="custom-select">
+        <select id="checkups" name="checkups" required>
+            <option value="never">Never</option>
+            <option value="every_few_years">Every few years</option>
+            <option value="once_a_year">Once a year</option>
+            <option value="more_than_once_a_year">More than once a year</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="16">
+    <label for="sun_protection">How often do you use sunscreen when exposed to the sun?</label>
+    <div class="custom-select">
+        <select id="sun_protection" name="sun_protection" required>
+            <option value="never">Never</option>
+            <option value="sometimes">Sometimes</option>
+            <option value="always">Always</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="17">
+    <label for="vaccinations">Are you up-to-date with your vaccinations?</label>
+    <div class="custom-select">
+        <select id="vaccinations" name="vaccinations" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="not_sure">Not Sure</option>
+        </select>
+    </div>
+</div>            
+<div class="question" data-question="18">
+    <label for="social_connections">How strong are your social connections (family, friends, community)?</label>
+    <div class="custom-select">
+        <select id="social_connections" name="social_connections" required>
+            <option value="weak">Weak</option>
+            <option value="average">Average</option>
+            <option value="strong">Strong</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="19">
+    <label for="pollution">Do you live in an area with high pollution?</label>
+    <div class="custom-select">
+        <select id="pollution" name="pollution" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="not_sure">Not Sure</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="20">
+    <label for="occupation">Do you work in a high-stress or high-risk occupation?</label>
+    <div class="custom-select">
+        <select id="occupation" name="occupation" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+</div>
+
+<div class="question" data-question="21">
+    <label for="substance_use">Do you use recreational drugs or have a history of substance abuse?</label>
+    <div class="custom-select">
+        <select id="substance_use" name="substance_use" required>
+            <option value="never">Never</option>
+            <option value="former">Former</option>
+            <option value="current">Current</option>
+        </select>
+    </div>
+</div>
+
+<!-- Navigation buttons -->
+<div class="nav-buttons">
+    <a href="#" id="back-button" class="button" onclick="navigate(-1)">Back</a>
+    <a href="#" id="next-button" class="button" onclick="navigate(1)">Next</a>
+    <div class="scanlines"></div>
+</div>
+</form>
+
+<!-- Logout link outside the form but inside the main container -->
+{% if 'username' in session %}
+<div class="logout-container">
+    <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+</div>
+{% endif %}
+</div> <!-- Closing questionnaire-container -->
+<script src="{{ url_for('static', filename='custom-select.js') }}"></script>
+<script src="{{ url_for('static', filename='questionnaire.js') }}"></script>
+<script src="{{ url_for('static', filename='validationmsg.js') }}"></script>
 </body>
 </html>

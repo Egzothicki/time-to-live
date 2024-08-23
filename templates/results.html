@@ -3,35 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Time Left to Live</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: #FFFFFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .center-text {
-            text-align: center;
-        }
-        .large-text {
-            font-size: 48px;
-            font-weight: bold;
-        }
-        .time-left {
-            font-size: 36px;
-            margin-top: 20px;
-        }
-    </style>
+    <title>Life Clock</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="center-text">
-        <div class="large-text">Your Time Left to Live</div>
-        <div id="countdown" class="time-left"></div>
+    <div class="content">
+        <div id="countdown" class="clock"></div>
+        <div class="scanlines"></div>
     </div>
 
     <script>
@@ -71,11 +49,11 @@
         updateCountdown();  // Initial call
         const timer = setInterval(updateCountdown, 1000);  // Update every second
     </script>
-    <br>
-            {% if 'username' in session %}
-            <div class="logout-container">
-                <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
-            </div>
-            {% endif %}
+
+    {% if 'username' in session %}
+    <div class="logout-container">
+        <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+    </div>
+    {% endif %}
 </body>
 </html>

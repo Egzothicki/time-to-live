@@ -1,0 +1,481 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;700&display=swap');
+
+body {
+    background-color: black;
+    font-family: 'Rajdhani', monospace;
+    color: #33FF33;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.large-text {
+    font-size: 90px;
+    font-family: 'Rajdhani', monospace;
+    color: #33FF33;
+    text-shadow: 
+        0 0 5px #33FF33,
+        0 0 10px #33FF33,
+        0 0 20px #33FF33,
+        0 0 40px #33FF33;
+    filter: blur(0.8px);
+    animation: flicker 1.5s infinite;
+}
+
+.link-button {
+    font-size: 30px;
+    font-family: 'Rajdhani', monospace;
+    color: #6fff6f;
+    text-shadow: 
+        0 0 1px #60fb60,
+        0 0 1px #60fb60,
+        0 0 2px #60fb60,
+        0 0 4px #60fb60;
+    filter: blur(0.8px);
+    animation: flicker 1.5s infinite;
+    text-decoration: none;
+}
+
+.link-button:hover {
+    color: #86fb86;
+    background-color: #00FF00;
+    text-shadow: 
+        0 0 20px #00FF00,
+        0 0 40px #00FF00,
+        0 0 60px #00FF00,
+        0 0 80px #00FF00; 
+    border-color: #00FF00;
+    font-weight: bold;
+}
+
+.scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.25) 0px,
+        rgba(0, 0, 0, 0.25) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+#questionnaire-container {
+    text-align: center;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.question-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 80%;
+    max-width: 600px;
+}
+
+.question-text {
+    font-size: 32px;
+    text-shadow: 0 0 10px #33FF33, 0 0 20px #33FF33;
+    margin-bottom: 20px;
+    animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
+}
+
+.terminal-input {
+    background-color: transparent;
+    color: #33FF33;
+    border: none;
+    border-bottom: 2px solid #33FF33;
+    font-size: 24px;
+    width: 100%;  /* Full width within the question-wrapper */
+    max-width: 600px; /* Limit maximum width */
+    text-align: center;
+    outline: none;
+    padding: 10px 0; /* Add some padding for better UX */
+    margin: 0 auto 20px auto; /* Center the input and add space at the bottom */
+    margin-top: 20px;
+    margin-bottom: 10px; 
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: #33FF33; }
+}
+
+/* Common styles for question labels with scanlines */
+.question {
+    display: flex;
+    flex-direction: column; /* Stack text above input */
+    align-items: center; /* Center align items */
+    font-size: 35px;
+    font-family: 'Rajdhani', monospace;
+    color: #33FF33;
+    text-shadow: 
+        0 0 1px #33FF33,
+        0 0 1px #33FF33,
+        0 0 2px #33FF33,
+        0 0 4px #33FF33;
+    filter: blur(0px);
+    animation: flicker 1.5s infinite;
+    position: relative;
+    margin-bottom: 10px; /* Space between question and next element */
+    text-align: center; /* Center the text */
+    width: 100%; /* Ensure the question takes the full width of its container */
+    min-width: 300px; /* Prevent the question from becoming too narrow */
+    max-width: 600px; /* Set a maximum width to avoid overly large text wrapping */
+}
+
+.question::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.25) 0px,
+        rgba(0, 0, 0, 0.25) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+/* Container styles to ensure scanlines do not interfere with layout */
+.container {
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #1E1E1E;
+    border-radius: 8px;
+    box-shadow: 0px 0px 20px rgba(0, 255, 0, 0.5);
+    text-align: center;
+    margin-top: 50px;
+    position: relative;
+    z-index: 2; /* Ensure content is above other elements */
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.nav-button:hover {
+    background-color: #66FF66;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.button {
+    font-size: 28px;
+    font-family: 'Rajdhani', monospace;
+    color: #6fff6f;
+    text-shadow: 
+        0 0 1px #60fb60,
+        0 0 1px #60fb60,
+        0 0 2px #60fb60,
+        0 0 4px #60fb60;
+    filter: blur(0.8px);
+    animation: flicker 1.5s infinite;
+    text-decoration: none;
+}
+
+.button:hover {
+    color: #86fb86;
+    background-color: #00FF00;
+    text-shadow: 
+        0 0 20px #00FF00,
+        0 0 40px #00FF00,
+        0 0 60px #00FF00,
+        0 0 80px #00FF00; 
+    border-color: #00FF00;
+    font-weight: bold;
+}
+
+.logout-container {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.logout-link {
+    font-size: 18px; /* Consistent with smaller buttons */
+    font-family: 'Rajdhani', monospace;
+    color: #6fff6f;
+    text-shadow: 
+        0 0 1px #60fb60,
+        0 0 1px #60fb60,
+        0 0 2px #60fb60,
+        0 0 4px #60fb60;
+    filter: blur(0.8px);
+    animation: flicker 1.5s infinite;
+    text-decoration: none;
+}
+
+.logout-link:hover {
+    color: #86fb86;
+    background-color: #00FF00;
+    text-shadow: 
+        0 0 20px #00FF00,
+        0 0 40px #00FF00,
+        0 0 60px #00FF00,
+        0 0 80px #00FF00;
+    border-color: #00FF00;
+    font-weight: bold;
+}
+
+/* Remove spinner (up/down arrows) from number input */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Remove the spinner in Firefox */
+}
+
+.custom-select {
+    position: relative;
+    display: block; /* Ensure it takes the full width within the parent */
+    width: 100%;
+    max-width: 600px; /* Adjust width as needed */
+    margin-top: 25px;
+    padding: 10px 0; /* Add some padding for better UX */
+    margin-bottom: 10px; /* Add space below the select box */
+}
+
+.custom-select select {
+    display: none; /* Hide the native select */
+}
+
+.custom-select::after {
+    content: '▼';
+    font-size: 16px;
+    color: #33FF33;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.custom-select .select-selected {
+    background-color: transparent;
+    color: #33FF33;
+    border: none;
+    border-bottom: 2px solid #33FF33;
+    font-size: 24px;
+    width: 100%;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    white-space: pre-wrap; 
+}
+
+.custom-select .select-items {
+    display: none; /* Ensure dropdown is hidden by default */
+    position: absolute;
+    background-color: black;
+    color: #33FF33;
+    font-family: 'Rajdhani', monospace;
+    font-size: 18px;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 99;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.custom-select .select-items div {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.custom-select .select-items div:hover, .custom-select .same-as-selected {
+    color: #86fb86;
+    text-shadow: 
+        0 0 20px #00FF00,
+        0 0 40px #00FF00,
+        0 0 60px #00FF00,
+        0 0 80px #00FF00; 
+    border-color: #00FF00;
+    font-weight: bold;
+}
+
+.select-arrow-active + .select-items {
+    display: block; /* Display dropdown when activated */
+}
+
+.custom-multi-select {
+    background-color: black;
+    color: #33FF33;
+    border: 2px solid #33FF33;
+    font-size: 24px;
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px; /* Rounded corners for better UX */
+    margin: 0 auto; /* Center the component horizontally */
+    text-align: left; /* Align text within the component */
+}
+
+.custom-multi-select label {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.custom-multi-select input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the entire question block */
+    margin-bottom: 20px;
+}
+
+.selection-summary {
+    color: #33FF33;
+    font-family: 'Rajdhani', monospace;
+    font-size: 18px;
+    text-align: center; /* Center the summary text */
+}
+.input-error {
+    border-color: #FF3333; /* Red border for invalid input */
+}
+
+.custom-error {
+    color: #FF3333;
+    background-color: #1E1E1E;
+    font-family: 'Rajdhani', monospace;
+    font-size: 14px;
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 5px;
+    position: relative;
+    top: -5px;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.custom-error::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #FF3333 transparent;
+}
+
+.smaller-link {
+    font-size: 20px; /* Adjust the font size as needed */
+}
+
+.register-link {
+    margin-top: 20px;
+    font-size: 20px;
+    text-shadow: 
+        0 0 1px #33FF33,
+        0 0 1px #33FF33,
+        0 0 2px #33FF33,
+        0 0 4px #33FF33;
+    color: #33FF33;
+    font-family: 'Rajdhani', monospace;
+}
+
+.centered-link {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    width: fit-content; /* Adjusts the width to fit the content */
+}
+
+/* Remove the background color for autofill */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px black inset !important;
+    -webkit-text-fill-color: #33FF33 !important;
+}
+
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px black inset !important;
+    -webkit-text-fill-color: #33FF33 !important;
+}
+
+.clock {
+    font-size: 66px;
+    font-family: 'Rajdhani', monospace;
+    color: #6fff6f;
+    text-shadow: 
+        0 0 1px #60fb60,
+        0 0 1px #60fb60,
+        0 0 2px #60fb60,
+        0 0 4px #60fb60;
+    filter: blur(0.8px);
+    animation: flicker 1.5s infinite;
+    text-decoration: none;
+}
+
+.error-message {
+    color: #ff4c4c; /* Red color for error */
+    text-shadow: 0 0 5px #ff4c4c, 0 0 10px #ff4c4c;
+    font-size: 20px;
+    margin-top: 10px;
+    text-align: center;
+}

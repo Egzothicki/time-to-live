@@ -24,6 +24,22 @@ def update_user_death_date(username, death_date):
     conn.commit()
     conn.close()
 
+def init_db():
+    conn = get_db_connection()
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            death_date TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Call this function when the app starts
+init_db()
+
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')
 

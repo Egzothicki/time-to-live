@@ -51,18 +51,18 @@ def calculate_life_expectancy(age, gender, family_history, medical_conditions, b
 
     # Adjustments based on the scoring system
     adjustments = {
-        'gender': {'male': -2, 'female': 0, 'other': -1},
-        'family_history': {'yes': -3, 'no': 0},
+        'gender': {'male': -2.2, 'female': 0, 'other': -1.1},
+        'family_history': {'yes': -3.1, 'no': 0},
         'medical_conditions': {
-            'diabetes': -4,
-            'heart_disease': -5,
-            'cancer': -3,
-            'hypertension': -2,
-            'none': 0
+            'diabetes': -4.1,
+            'heart_disease': -5.21,
+            'cancer': -3.1,
+            'hypertension': -2.124,
+            'none': 0.2145
         },
-        'blood_pressure': {'yes': -3, 'no': 0},
+        'blood_pressure': {'yes': -3.1321, 'no': 0.4124},
         'cholesterol': {'yes': -3, 'no': 0},
-        'smoker': {'never': 0, 'former': -3, 'current': -10},
+        'smoker': {'never': 0.132, 'former': -3, 'current': -10},
         'alcohol': {'0': 0, '1-3': -1, '4-7': -2, '8+': -5},
         'exercise': {
             '0': -5, '1': -2, '2': -2, 

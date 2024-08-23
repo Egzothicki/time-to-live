@@ -1,38 +1,33 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime, timedelta
+import sqlite3  # Import the sqlite3 module
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')
 
-# File to store user credentials
-USER_FILE = 'users.txt'
+# Database helper functions
+def get_db_connection():
+    conn = sqlite3.connect('users.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
-def load_users():
-    users = {}
-    with open('users.txt', 'r') as f:
-        for line in f:
-            parts = line.strip().split(':', 2)  # Split only on the first two colons
-            if len(parts) == 3:
-                username, password, death_date = parts
-                users[username] = (password, death_date)
-            elif len(parts) == 2:
-                username, password = parts
-                users[username] = (password, None)
-            else:
-                # Log or handle the malformed line
-                print(f"Malformed line in users.txt: {line}")
-    return users
+def get_user_by_username(username):
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+    conn.close()
+    return user
 
 def update_user_death_date(username, death_date):
-    users = load_users()
-    if username in users:
-        users[username] = (users[username][0], death_date)  # Update the death date
+    conn = get_db_connection()
+    conn.execute('UPDATE users SET death_date = ? WHERE username = ?', (death_date, username))
+    conn.commit()
+    conn.close()
 
-        # Write the updated users back to the file
-        with open('users.txt', 'w') as f:
-            for user, (password, saved_death_date) in users.items():
-                f.write(f"{user}:{password}:{saved_death_date}\n")
+app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')
+
+
 
 def sanitize_input(value, default=0):
     try:
@@ -135,15 +130,15 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    users = load_users()
-    error = None
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        if username in users and users[username][0] == password:
+        user = get_user_by_username(username)
+
+        if user and user['password'] == password:
             session['username'] = username
-            death_date = users[username][1]
+            death_date = user['death_date']
 
             # Check if the user has already completed the questionnaire
             if death_date:
@@ -151,9 +146,9 @@ def login():
             else:
                 return redirect(url_for('questionnaire'))  # Redirects to questionnaire
         else:
-            error = "Invalid credentials. Please try again."
+            return render_template('login.html', error="Invalid credentials")
 
-    return render_template('login.html', error=error)
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
@@ -162,23 +157,21 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    users = load_users()  # Load users with the expected format of 'username:password:death_date'
-    error = None
-
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        if username in users:
-            error = "Username already exists."
-        else:
-            with open(USER_FILE, 'a') as f:
-                # Append the username, password, and a placeholder for death date
-                f.write(f"{username}:{password}:\n")
-            session['username'] = username
-            return redirect(url_for('questionnaire'))
+        if get_user_by_username(username):
+            return render_template('register.html', error="Username already exists")
 
-    return render_template('register.html', error=error)
+        conn = get_db_connection()
+        conn.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
 
 @app.route('/questionnaire')
 def questionnaire():
@@ -239,7 +232,6 @@ def submit_questionnaire():
     # Format the death_date to a string format that JavaScript can easily parse
     death_date_str = death_date.strftime('%Y-%m-%dT%H:%M:%S')
 
-    # Save the death date to the users.txt file
     update_user_death_date(session['username'], death_date_str)
 
     # Redirect to the results page to display the countdown
@@ -257,10 +249,9 @@ def results():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    # Load the user's data
-    users = load_users()
-    username = session['username']
-    death_date = users.get(username, (None, None))[1]
+    # Load the user's data from the database
+    user = get_user_by_username(session['username'])
+    death_date = user['death_date']
 
     if death_date:
         return render_template('results.html', death_date=death_date)

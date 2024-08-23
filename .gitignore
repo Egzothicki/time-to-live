@@ -9,7 +9,7 @@ venv/
 .env
 
 # User files
-users.txt
+users.db
 
 # IDE specific
 .vscode/
